@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abstraction Architecture Visualization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+            font-weight: 700;
+        }
+
+        .abstraction-levels {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            gap: 20px;
+        }
+
+        .level-card {
+            flex: 1;
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .level-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .level-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .level-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .concrete .level-title { color: #e74c3c; }
+        .simplified .level-title { color: #f39c12; }
+        .abstract .level-title { color: #27ae60; }
+
+        .complexity-indicator {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .concrete .complexity-indicator {
+            background: linear-gradient(90deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .simplified .complexity-indicator {
+            background: linear-gradient(90deg, #f39c12 0%, #e67e22 100%);
+        }
+
+        .abstract .complexity-indicator {
+            background: linear-gradient(90deg, #27ae60 0%, #229954 100%);
+        }
+
+        .car-dashboard {
+            background: linear-gradient(145deg, #2c3e50, #34495e);
+            border-radius: 15px;
+            padding: 20px;
+            color: white;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .gauge {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #34495e, #2c3e50);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .gauge:hover {
+            background: linear-gradient(145deg, #3498db, #2980b9);
+            transform: scale(1.1);
+        }
+
+        .gauge-label {
+            font-size: 10px;
+            margin-top: 5px;
+        }
+
+        .engine-details {
+            background: #1a1a1a;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            line-height: 1.4;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .engine-details.show {
+            max-height: 300px;
+        }
+
+        .restaurant-demo {
+            display: flex;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .menu-card {
+            flex: 1;
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-item {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .menu-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .recipe-details {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            font-size: 14px;
+            color: #2c3e50;
+        }
+
+        .recipe-details.show {
+            max-height: 200px;
+        }
+
+        .map-demo {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .map-level {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .map-level:hover {
+            transform: scale(1.05);
+        }
+
+        .map-visual {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 15px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .world-map {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+
+        .city-map {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+        }
+
+        .street-map {
+            background: linear-gradient(135deg, #27ae60, #229954);
+        }
+
+        .code-abstraction {
+            display: flex;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .code-level {
+            flex: 1;
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .code-title {
+            color: #f39c12;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .high-level { border-left: 4px solid #27ae60; }
+        .mid-level { border-left: 4px solid #f39c12; }
+        .low-level { border-left: 4px solid #e74c3c; }
+
+        .abstraction-layers {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .layer {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .layer:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(10px);
+        }
+
+        .ui-layer { border-left-color: #e74c3c; }
+        .business-layer { border-left-color: #f39c12; }
+        .data-layer { border-left-color: #27ae60; }
+        .hardware-layer { border-left-color: #9b59b6; }
+
+        .benefits-showcase {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .benefit-card {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .benefit-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+            opacity: 0;
+        }
+
+        .benefit-card:hover::before {
+            animation: shine 0.6s ease-in-out;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); opacity: 0; }
+        }
+
+        .demo-controls {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .demo-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            margin: 0 10px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .demo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .demo-btn:active {
+            transform: translateY(0);
+        }
+
+        .explanation {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        .floating-detail {
+            position: fixed;
+            background: rgba(44, 62, 80, 0.95);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 300px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform: scale(0);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .floating-detail.show {
+            transform: scale(1);
+        }
+
+        @media (max-width: 768px) {
+            .abstraction-levels {
+                flex-direction: column;
+            }
+            
+            .restaurant-demo {
+                flex-direction: column;
+            }
+            
+            .map-demo {
+                grid-template-columns: 1fr;
+            }
+            
+            .code-abstraction {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎭 Abstraction in Software Architecture</h1>
+        
+        <div class="abstraction-levels">
+            <div class="level-card concrete" onclick="showLevel('concrete')">
+                <div class="level-header">
+                    <div class="level-title">🔧 Concrete Level</div>
+                    <div class="complexity-indicator"></div>
+                    <div style="font-size: 12px; color: #e74c3c;">High Complexity</div>
+                </div>
+                <div class="car-dashboard">
+                    <div style="text-align: center; margin-bottom: 15px;">🚗 All Engine Details</div>
+                    <div class="engine-details" id="engine-details">
+                        ENGINE DIAGNOSTICS:<br>
+                        ├── Cylinder 1: 875°F, 2100 RPM<br>
+                        ├── Cylinder 2: 882°F, 2105 RPM<br>
+                        ├── Cylinder 3: 879°F, 2098 RPM<br>
+                        ├── Cylinder 4: 884°F, 2110 RPM<br>
+                        ├── Oil Pressure: 45.2 PSI<br>
+                        ├── Coolant Temp: 195°F<br>
+                        ├── Air/Fuel Ratio: 14.7:1<br>
+                        ├── Ignition Timing: 12° BTDC<br>
+                        ├── Throttle Position: 15.3%<br>
+                        ├── Mass Airflow: 12.5 g/s<br>
+                        └── ECU Status: OPTIMAL<br>
+                    </div>
+                </div>
+                <p style="text-align: center; color: #e74c3c; font-size: 14px;">
+                    <strong>Too much information!</strong><br>
+                    Overwhelming for daily use 😵‍💫
+                </p>
+            </div>
+
+            <div class="level-card simplified" onclick="showLevel('simplified')">
+                <div class="level-header">
+                    <div class="level-title">📊 Simplified Level</div>
+                    <div class="complexity-indicator"></div>
+                    <div style="font-size: 12px; color: #f39c12;">Medium Complexity</div>
+                </div>
+                <div class="car-dashboard">
+                    <div style="text-align: center; margin-bottom: 15px;">🚗 Dashboard View</div>
+                    <div class="dashboard-grid">
+                        <div class="gauge" onclick="showGaugeDetail(event, 'speed')">
+                            <div style="font-size: 16px;">65</div>
+                            <div class="gauge-label">MPH</div>
+                        </div>
+                        <div class="gauge" onclick="showGaugeDetail(event, 'rpm')">
+                            <div style="font-size: 16px;">2.1K</div>
+                            <div class="gauge-label">RPM</div>
+                        </div>
+                        <div class="gauge" onclick="showGaugeDetail(event, 'fuel')">
+                            <div style="font-size: 16px;">3/4</div>
+                            <div class="gauge-label">FUEL</div>
+                        </div>
+                    </div>
+                </div>
+                <p style="text-align: center; color: #f39c12; font-size: 14px;">
+                    <strong>Essential information only</strong><br>
+                    Useful for monitoring 📊
+                </p>
+            </div>
+
+            <div class="level-card abstract" onclick="showLevel('abstract')">
+                <div class="level-header">
+                    <div class="level-title">🎯 Abstract Level</div>
+                    <div class="complexity-indicator"></div>
+                    <div style="font-size: 12px; color: #27ae60;">Low Complexity</div>
+                </div>
+                <div class="car-dashboard">
+                    <div style="text-align: center; margin-bottom: 20px;">🚗 Simple Controls</div>
+                    <div style="display: flex; justify-content: space-around; align-items: center;">
+                        <div class="gauge" onclick="carAction('start')" style="background: linear-gradient(145deg, #27ae60, #229954);">
+                            <div style="font-size: 20px;">🔑</div>
+                            <div class="gauge-label">START</div>
+                        </div>
+                        <div class="gauge" onclick="carAction('drive')" style="background: linear-gradient(145deg, #3498db, #2980b9);">
+                            <div style="font-size: 20px;">🚗</div>
+                            <div class="gauge-label">DRIVE</div>
+                        </div>
+                        <div class="gauge" onclick="carAction('stop')" style="background: linear-gradient(145deg, #e74c3c, #c0392b);">
+                            <div style="font-size: 20px;">🛑</div>
+                            <div class="gauge-label">STOP</div>
+                        </div>
+                    </div>
+                </div>
+                <p style="text-align: center; color: #27ae60; font-size: 14px;">
+                    <strong>Just the essentials!</strong><br>
+                    Perfect for everyday use 😊
+                </p>
+            </div>
+        </div>
+
+        <div class="restaurant-demo">
+            <div class="menu-card">
+                <h4 style="color: #2c3e50; text-align: center; margin-bottom: 20px;">🍽️ Restaurant Menu (Abstract)</h4>
+                <div class="menu-item" onclick="toggleRecipe(this, 'pasta')">
+                    🍝 Spaghetti Carbonara - $18
+                    <div class="recipe-details">
+                        <strong>What you see:</strong> Delicious creamy pasta with bacon<br>
+                        <strong>Hidden complexity:</strong><br>
+                        • Source eggs from local farm<br>
+                        • Age Parmigiano for 24 months<br>
+                        • Cure guanciale for 3 weeks<br>
+                        • Perfect egg tempering technique<br>
+                        • Precise timing coordination<br>
+                        • Kitchen equipment management
+                    </div>
+                </div>
+                <div class="menu-item" onclick="toggleRecipe(this, 'steak')">
+                    🥩 Grilled Ribeye - $32
+                    <div class="recipe-details">
+                        <strong>What you see:</strong> Perfectly grilled steak<br>
+                        <strong>Hidden complexity:</strong><br>
+                        • Beef aging process (28 days)<br>
+                        • Temperature monitoring<br>
+                        • Seasoning blend preparation<br>
+                        • Grill temperature control<br>
+                        • Resting time calculations<br>
+                        • Side dish coordination
+                    </div>
+                </div>
+                <div class="menu-item" onclick="toggleRecipe(this, 'dessert')">
+                    🍰 Chocolate Soufflé - $12
+                    <div class="recipe-details">
+                        <strong>What you see:</strong> Light, airy chocolate dessert<br>
+                        <strong>Hidden complexity:</strong><br>
+                        • Precise temperature control<br>
+                        • Timing coordination<br>
+                        • Egg white whipping technique<br>
+                        • Oven calibration<br>
+                        • Ingredient preparation<br>
+                        • Service timing management
+                    </div>
+                </div>
+                <p style="color: #27ae60; text-align: center; margin-top: 15px;">
+                    <strong>Simple menu hides kitchen complexity!</strong>
+                </p>
+            </div>
+
+            <div class="menu-card">
+                <h4 style="color: #2c3e50; text-align: center; margin-bottom: 20px;">🔧 If No Abstraction</h4>
+                <div style="background: #e74c3c; color: white; padding: 15px; border-radius: 10px; font-size: 12px;">
+                    <strong>Menu would look like:</strong><br><br>
+                    🍝 To make Carbonara:<br>
+                    1. Source Parmigiano from Italy<br>
+                    2. Age for 24 months<br>
+                    3. Cure guanciale for 3 weeks<br>
+                    4. Heat pan to exactly 185°F<br>
+                    5. Temper eggs at room temp<br>
+                    6. Monitor pasta water salinity<br>
+                    7. Time everything perfectly<br>
+                    8. Clean equipment afterward<br>
+                    9. Manage inventory<br>
+                    10. Handle food safety...<br><br>
+                    <em>And 50+ more steps!</em>
+                </div>
+                <p style="color: #e74c3c; text-align: center; margin-top: 15px;">
+                    <strong>Nobody would ever order!</strong><br>
+                    Too overwhelming 😱
+                </p>
+            </div>
+        </div>
+
+        <div class="map-demo">
+            <div class="map-level" onclick="showMapDetail('world')">
+                <div class="map-visual world-map">🌍</div>
+                <h4>World Map</h4>
+                <p>Shows continents and countries. Hides cities, streets, buildings.</p>
+                <div style="color: #3498db; margin-top: 10px;">
+                    <strong>Abstraction Level: Highest</strong>
+                </div>
+            </div>
+            
+            <div class="map-level" onclick="showMapDetail('city')">
+                <div class="map-visual city-map">🏙️</div>
+                <h4>City Map</h4>
+                <p>Shows districts and main roads. Hides individual buildings, details.</p>
+                <div style="color: #e67e22; margin-top: 10px;">
+                    <strong>Abstraction Level: Medium</strong>
+                </div>
+            </div>
+            
+            <div class="map-level" onclick="showMapDetail('street')">
+                <div class="map-visual street-map">🛣️</div>
+                <h4>Street Map</h4>
+                <p>Shows every street and building. Hides room layouts, furniture.</p>
+                <div style="color: #27ae60; margin-top: 10px;">
+                    <strong>Abstraction Level: Lowest</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="code-abstraction">
+            <div class="code-level high-level">
+                <div class="code-title">🎯 High-Level Abstraction</div>
+                <div>
+                    // Simple interface<br>
+                    user.sendEmail(<br>
+                    &nbsp;&nbsp;"hello@example.com",<br>
+                    &nbsp;&nbsp;"Hello World!"<br>
+                    );<br><br>
+                    
+                    // Complex operations hidden:<br>
+                    // ✓ SMTP connection<br>
+                    // ✓ Authentication<br>
+                    // ✓ Message formatting<br>
+                    // ✓ Error handling<br>
+                    // ✓ Queue management<br>
+                </div>
+            </div>
+
+            <div class="code-level mid-level">
+                <div class="code-title">📊 Mid-Level Abstraction</div>
+                <div>
+                    // More details visible<br>
+                    EmailService service;<br>
+                    service.configure(smtp_host);<br>
+                    service.authenticate(credentials);<br>
+                    service.compose(message);<br>
+                    service.send();<br>
+                    service.handleResponse();<br><br>
+                    
+                    // Still hides:<br>
+                    // • Socket connections<br>
+                    // • Protocol details<br>
+                    // • Memory management<br>
+                </div>
+            </div>
+
+            <div class="code-level low-level">
+                <div class="code-title">🔧 Low-Level Details</div>
+                <div>
+                    // All the gory details<br>
+                    socket = create_socket();<br>
+                    connect(socket, smtp_server);<br>
+                    send("HELO domain.com\\r\\n");<br>
+                    recv(response_buffer, 256);<br>
+                    parse_smtp_response(buffer);<br>
+                    send("AUTH LOGIN\\r\\n");<br>
+                    encode_base64(username);<br>
+                    manage_memory_allocation();<br>
+                    handle_network_errors();<br>
+                    // ... 100+ more lines
+                </div>
+            </div>
+        </div>
+
+        <div class="abstraction-layers">
+            <h3 style="text-align: center; margin-bottom: 25px;">🏗️ Software Architecture Layers</h3>
+            
+            <div class="layer ui-layer" onclick="highlightLayer(this)">
+                <h4>🖥️ User Interface Layer</h4>
+                <p>What users see and interact with. Hides all technical complexity.</p>
+                <small>Examples: Buttons, forms, menus, graphics</small>
+            </div>
+            
+            <div class="layer business-layer" onclick="highlightLayer(this)">
+                <h4>💼 Business Logic Layer</h4>
+                <p>Rules and processes. Hides data storage and UI implementation.</p>
+                <small>Examples: Validation, calculations, workflows</small>
+            </div>
+            
+            <div class="layer data-layer" onclick="highlightLayer(this)">
+                <h4>💾 Data Access Layer</h4>
+                <p>Database operations. Hides SQL queries and storage details.</p>
+                <small>Examples: CRUD operations, data mapping</small>
+            </div>
+            
+            <div class="layer hardware-layer" onclick="highlightLayer(this)">
+                <h4>⚙️ Hardware Layer</h4>
+                <p>Physical infrastructure. Hides circuits, processors, memory.</p>
+                <small>Examples: CPU, RAM, storage devices</small>
+            </div>
+        </div>
+
+        <div class="demo-controls">
+            <button class="demo-btn" onclick="demonstrateAbstraction()">🎭 Show Abstraction Magic</button>
+            <button class="demo-btn" onclick="simulateComplexity()">🌪️ Remove All Abstraction</button>
+            <button class="demo-btn" onclick="showBenefits()">✨ Highlight Benefits</button>
+            <button class="demo-btn" onclick="resetDemo()">🔄 Reset Demo</button>
+        </div>
+
+        <div class="benefits-showcase">
+            <div class="benefit-card" onclick="animateBenefit(this)">
+                <h4>🧠 Reduced Cognitive Load</h4>
+                <p>Hide complexity so people can focus on what matters. Like using a TV remote instead of rewiring circuits.</p>
+            </div>
+            <div class="benefit-card" onclick="animateBenefit(this)">
+                <h4>🔄 Reusability</h4>
+                <p>Abstract components can be used in different contexts without modification. One email function works everywhere.</p>
+            </div>
+            <div class="benefit-card" onclick="animateBenefit(this)">
+                <h4>🛡️ Maintainability</h4>
+                <p>Changes to implementation don't affect the interface. Upgrade the engine without changing the steering wheel.</p>
+            </div>
+            <div class="benefit-card" onclick="animateBenefit(this)">
+                <h4>👥 Team Collaboration</h4>
+                <p>Different teams can work on different abstraction levels without interfering with each other.</p>
+            </div>
+            <div class="benefit-card" onclick="animateBenefit(this)">
+                <h4>🚀 Faster Development</h4>
+                <p>Build on existing abstractions instead of reinventing everything from scratch each time.</p>
+            </div>
+            <div class="benefit-card" onclick="animateBenefit(this)">
+                <h4>🎯 Clear Separation</h4>
+                <p>Each layer has a specific purpose and responsibility, making the system easier to understand and debug.</p>
+            </div>
+        </div>
+
+        <div class="explanation">
+            <h3>🎭 What is Abstraction?</h3>
+            <p>Abstraction is like having different levels of detail for different needs. When you drive a car, you don't think about the engine's pistons - you just press the gas pedal. When you order food, you don't worry about the kitchen's complexity - you just choose from the menu.</p>
+            
+            <p style="margin-top: 15px;"><strong>Real-world examples:</strong></p>
+            <ul style="margin: 10px 0 0 20px;">
+                <li><strong>🚗 Car:</strong> Steering wheel hides complex steering mechanism</li>
+                <li><strong>📱 Phone:</strong> Icons hide complex software operations</li>
+                <li><strong>🏦 ATM:</strong> Simple buttons hide banking system complexity</li>
+                <li><strong>🗺️ Maps:</strong> Show only relevant detail for your zoom level</li>
+            </ul>
+            
+            <p style="margin-top: 15px;"><strong>The Golden Rule:</strong> Show only what's necessary at each level. Hide everything else behind simple, intuitive interfaces.</p>
+        </div>
+    </div>
+
+    <div class="floating-detail" id="floating-detail">

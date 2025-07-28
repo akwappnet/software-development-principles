@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Software Quality Principles</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .principle-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .principle-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .principle-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7);
+            background-size: 500% 100%;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .principle-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .principle-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .principle-analogy {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3498db;
+        }
+
+        .analogy-title {
+            font-weight: bold;
+            color: #2980b9;
+            margin-bottom: 8px;
+        }
+
+        .principle-explanation {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .example-section {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #27ae60;
+        }
+
+        .example-title {
+            font-weight: bold;
+            color: #27ae60;
+            margin-bottom: 8px;
+        }
+
+        .demo-button {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .demo-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .demo-area {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f1f2f6;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .demo-area.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fail-fast-demo {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .fail-fast-demo button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .good-button {
+            background: #27ae60;
+            color: white;
+        }
+
+        .bad-button {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .surprise-demo input {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            margin: 5px;
+            width: 200px;
+        }
+
+        .convention-demo {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .config-example {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 0.8rem;
+        }
+
+        .immutable-demo {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .box {
+            width: 60px;
+            height: 60px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .mutable-box {
+            background: #e74c3c;
+        }
+
+        .immutable-box {
+            background: #27ae60;
+        }
+
+        .truth-demo {
+            text-align: center;
+        }
+
+        .truth-sources {
+            display: flex;
+            justify-content: space-around;
+            margin: 15px 0;
+        }
+
+        .source {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            min-width: 80px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .source.highlight {
+            background: #3498db;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Software Quality Principles</h1>
+            <p>Learn the 5 fundamental principles that make software reliable and maintainable</p>
+        </div>
+
+        <div class="principles-grid">
+            <!-- Fail Fast -->
+            <div class="principle-card">
+                <div class="principle-icon">⚡</div>
+                <div class="principle-title">Fail Fast</div>
+                
+                <div class="principle-analogy">
+                    <div class="analogy-title">🏥 Like Medical Checkups</div>
+                    It's better to find problems early (regular checkups) than wait until you're seriously ill. Early detection = easier treatment!
+                </div>
+
+                <div class="principle-explanation">
+                    When something goes wrong in your code, make it fail immediately and clearly rather than continuing with bad data that causes bigger problems later.
+                </div>
+
+                <div class="example-section">
+                    <div class="example-title">Real Example:</div>
+                    Instead of accepting invalid email formats and failing silently, immediately show "Invalid email format" when user types wrong format.
+                </div>
+
+                <button class="demo-button" onclick="toggleDemo('fail-fast')">Try Interactive Demo</button>
+                <div class="demo-area" id="fail-fast">
+                    <div class="fail-fast-demo">
+                        <button class="good-button" onclick="showResult('fail-fast-result', 'Good! Failed fast with clear message: Invalid email format')">
+                            Good: Check Email ✓
+                        </button>
+                        <button class="bad-button" onclick="showResult('fail-fast-result', 'Bad: Accepted invalid email, will cause problems later when trying to send')">
+                            Bad: Accept Anything ✗
+                        </button>
+                    </div>
+                    <div id="fail-fast-result" style="margin-top: 10px; padding: 10px; border-radius: 5px;"></div>
+                </div>
+            </div>
+
+            <!-- Principle of Least Surprise -->
+            <div class="principle-card">
+                <div class="principle-icon">🎯</div>
+                <div class="principle-title">Principle of Least Surprise</div>
+                
+                <div class="principle-analogy">
+                    <div class="analogy-title">🚗 Like Driving Any Car</div>
+                    No matter which car you drive, the brake pedal is always on the left, gas on the right. You don't have to relearn for each car!
+                </div>
+
+                <div class="principle-explanation">
+                    Your software should work exactly how users expect it to work. Don't surprise them with unexpected behavior or unusual interfaces.
+                </div>
+
+                <div class="example-section">
+                    <div class="example-title">Real Example:</div>
+                    A "Save" button should save the document, not delete it. A red button typically means danger/delete, green means safe/proceed.
+                </div>
+
+                <button class="demo-button" onclick="toggleDemo('surprise')">Try Interactive Demo</button>
+                <div class="demo-area" id="surprise">
+                    <div class="surprise-demo">
+                        <p>Type your name:</p>
+                        <input type="text" placeholder="Enter your name..." onkeyup="checkInput(this.value)">
+                        <div id="surprise-result" style="margin-top: 10px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Convention over Configuration -->
+            <div class="principle-card">
+                <div class="principle-icon">🏗️</div>
+                <div class="principle-title">Convention over Configuration</div>
+                
+                <div class="principle-analogy">
+                    <div class="analogy-title">🏠 Like Building Houses</div>
+                    Most houses have doors at the front, light switches near doorways, and bathrooms upstairs. Following these conventions means less planning needed!
+                </div>
+
+                <div class="principle-explanation">
+                    Use sensible defaults and standard patterns so developers don't have to configure everything from scratch. Make the common case simple.
+                </div>
+
+                <div class="example-section">
+                    <div class="example-title">Real Example:</div>
+                    A web framework assumes your database is called "database.db" and your homepage is "index.html" unless you specify otherwise.
+                </div>
+
+                <button class="demo-button" onclick="toggleDemo('convention')">See Comparison</button>
+                <div class="demo-area" id="convention">
+                    <div class="convention-demo">
+                        <div>
+                            <h4 style="color: #e74c3c;">❌ Lots of Configuration</h4>
+                            <div class="config-example">
+database.host = "localhost"<br>
+database.port = 5432<br>
+database.name = "myapp"<br>
+server.port = 3000<br>
+log.level = "info"<br>
+files.upload = "/uploads"<br>
+files.static = "/public"
+                            </div>
+                        </div>
+                        <div>
+                            <h4 style="color: #27ae60;">✅ Convention (Smart Defaults)</h4>
+                            <div class="config-example">
+// Just works! Uses smart defaults:<br>
+// - Database on localhost:5432<br>
+// - Server on port 3000<br>
+// - Logs at info level<br>
+// - Standard folder structure<br>
+<br>
+app.start() // That's it!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Immutability -->
+            <div class="principle-card">
+                <div class="principle-icon">🔒</div>
+                <div class="principle-title">Immutability</div>
+                
+                <div class="principle-analogy">
+                    <div class="analogy-title">📜 Like Historical Documents</div>
+                    Once a historical document is written, you don't erase and change it. You create a new version with updates, keeping the original safe!
+                </div>
+
+                <div class="principle-explanation">
+                    Instead of changing existing data, create new copies with your changes. This prevents bugs from unexpected modifications and makes your code more predictable.
+                </div>
+
+                <div class="example-section">
+                    <div class="example-title">Real Example:</div>
+                    Instead of modifying a user's profile directly, create a new profile object with the changes, leaving the original untouched.
+                </div>
+
+                <button class="demo-button" onclick="toggleDemo('immutable')">See Difference</button>
+                <div class="demo-area" id="immutable">
+                    <div class="immutable-demo">
+                        <div>
+                            <div class="box mutable-box" id="mutable-box">5</div>
+                            <button onclick="changeMutable()">Change Value (Risky)</button>
+                            <p style="font-size: 0.8rem; color: #e74c3c;">Original data gets modified!</p>
+                        </div>
+                        <div>
+                            <div class="box immutable-box" id="immutable-box">5</div>
+                            <button onclick="createImmutable()">Create New (Safe)</button>
+                            <p style="font-size: 0.8rem; color: #27ae60;">Original stays safe!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Single Source of Truth -->
+            <div class="principle-card">
+                <div class="principle-icon">📍</div>
+                <div class="principle-title">Single Source of Truth</div>
+                
+                <div class="principle-analogy">
+                    <div class="analogy-title">📚 Like a Library Catalog</div>
+                    A library has ONE master catalog that tells you where every book is. Imagine the chaos if different catalogs said different things!
+                </div>
+
+                <div class="principle-explanation">
+                    Each piece of information should have exactly one authoritative source. Don't duplicate data across multiple places where they can get out of sync.
+                </div>
+
+                <div class="example-section">
+                    <div class="example-title">Real Example:</div>
+                    Store user's email in ONE database table, not scattered across multiple tables where they might become inconsistent.
+                </div>
+
+                <button class="demo-button" onclick="toggleDemo('truth')">See The Problem</button>
+                <div class="demo-area" id="truth">
+                    <div class="truth-demo">
+                        <p>What's John's current age?</p>
+                        <div class="truth-sources">
+                            <div class="source" onclick="highlightSource(this, '25')">Profile: 25</div>
+                            <div class="source" onclick="highlightSource(this, '26')">Database: 26</div>
+                            <div class="source" onclick="highlightSource(this, '24')">Cache: 24</div>
+                        </div>
+                        <div id="truth-result"></div>
+                        <p style="font-size: 0.9rem; color: #e74c3c; margin-top: 10px;">
+                            ❌ Confusion! Multiple sources = Multiple truths<br>
+                            ✅ Solution: ONE authoritative source for age
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>💡 These principles work together to create robust, maintainable software that developers love to work with!</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleDemo(id) {
+            const demo = document.getElementById(id);
+            demo.classList.toggle('active');
+        }
+
+        function showResult(elementId, message) {
+            const result = document.getElementById(elementId);
+            result.textContent = message;
+            result.style.background = message.startsWith('Good') ? '#d5f4e6' : '#ffeaa7';
+            result.style.padding = '10px';
+            result.style.borderRadius = '5px';
+        }
+
+        function checkInput(value) {
+            const result = document.getElementById('surprise-result');
+            if (value.length > 0) {
+                result.innerHTML = `<span style="color: #27ae60;">✓ Hello ${value}!</span><br><small>This behaves exactly as expected - no surprises!</small>`;
+            } else {
+                result.textContent = '';
+            }
+        }
+
+        let mutableValue = 5;
+        let immutableValues = [5];
+
+        function changeMutable() {
+            mutableValue = Math.floor(Math.random() * 10) + 1;
+            document.getElementById('mutable-box').textContent = mutableValue;
+        }
+
+        function createImmutable() {
+            const newValue = Math.floor(Math.random() * 10) + 1;
+            immutableValues.push(newValue);
+            const box = document.getElementById('immutable-box');
+            box.textContent = newValue;
+            box.style.transform = 'scale(1.2)';
+            setTimeout(() => {
+                box.style.transform = 'scale(1)';
+            }, 200);
+        }
+
+        function highlightSource(element, value) {
+            // Remove previous highlights
+            document.querySelectorAll('.source').forEach(s => s.classList.remove('highlight'));
+            
+            // Highlight selected
+            element.classList.add('highlight');
+            
+            // Show result
+            const result = document.getElementById('truth-result');
+            result.innerHTML = `<strong>Selected: ${value} years old</strong><br><small>But which one is correct? 🤔</small>`;
+            result.style.background = '#fff3cd';
+            result.style.padding = '10px';
+            result.style.borderRadius = '5px';
+            result.style.marginTop = '10px';
+        }
+
+        // Add some interactive animations on load
+        window.addEventListener('load', () => {
+            const cards = document.querySelectorAll('.principle-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'all 0.5s ease';
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 100);
+                }, index * 150);
+            });
+        });
+    </script>
+</body>
+</html>

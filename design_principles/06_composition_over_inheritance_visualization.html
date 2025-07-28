@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Composition over Inheritance Principle</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .composition {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .analogy-section {
+            background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .analogy-section h2 {
+            color: #2d3436;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .toy-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .toy-approach {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .inheritance-toy {
+            border-top: 5px solid #e74c3c;
+        }
+
+        .composition-toy {
+            border-top: 5px solid #27ae60;
+        }
+
+        .toy-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .inheritance-toy .toy-title {
+            color: #e74c3c;
+        }
+
+        .composition-toy .toy-title {
+            color: #27ae60;
+        }
+
+        .toy-example {
+            margin: 20px 0;
+        }
+
+        .lego-piece {
+            display: inline-block;
+            padding: 8px 12px;
+            margin: 5px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .fly-piece {
+            background: #e8f4fd;
+            border: 2px solid #3498db;
+            color: #2980b9;
+        }
+
+        .swim-piece {
+            background: #e8f6f3;
+            border: 2px solid #2ecc71;
+            color: #27ae60;
+        }
+
+        .engine-piece {
+            background: #fdf2e9;
+            border: 2px solid #e67e22;
+            color: #d35400;
+        }
+
+        .tree-structure {
+            text-align: left;
+            font-family: monospace;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-size: 0.9em;
+            line-height: 1.8;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin: 40px 0;
+        }
+
+        .scenario {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .scenario:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .bad {
+            border-left: 5px solid #e74c3c;
+        }
+
+        .good {
+            border-left: 5px solid #27ae60;
+        }
+
+        .scenario h2 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .bad h2 {
+            color: #e74c3c;
+        }
+
+        .good h2 {
+            color: #27ae60;
+        }
+
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        .code-title {
+            background: #34495e;
+            color: #ecf0f1;
+            padding: 8px 15px;
+            border-radius: 5px 5px 0 0;
+            margin: -25px -25px 20px -25px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .inheritance-problems {
+            background: #fadbd8;
+            border-left: 4px solid #e74c3c;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .composition-benefits {
+            background: #d5f4e6;
+            border-left: 4px solid #27ae60;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .interactive-demo {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .demo-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .demo-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            background: white;
+            color: #0984e3;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+        }
+
+        .demo-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .demo-btn.active {
+            background: #fdcb6e;
+            color: #2d3436;
+        }
+
+        .demo-result {
+            margin-top: 30px;
+            padding: 25px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            min-height: 250px;
+            text-align: left;
+        }
+
+        .vehicle-builder {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .component {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px dashed rgba(255,255,255,0.3);
+        }
+
+        .component.selected {
+            border: 2px solid #fdcb6e;
+            background: rgba(253,203,110,0.2);
+        }
+
+        .benefits {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .benefit {
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .benefit:hover {
+            transform: scale(1.05);
+        }
+
+        .benefit-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .benefit h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .benefit p {
+            color: #34495e;
+            line-height: 1.6;
+        }
+
+        .real-world {
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 40px 0;
+        }
+
+        .real-world h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        .examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .example {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            border-top: 4px solid #3498db;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .example h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .comparison, .toy-comparison {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2.2em;
+            }
+            
+            .demo-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .vehicle-builder {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: #856404;
+            font-weight: bold;
+        }
+
+        .problem {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><span class="composition">Composition over Inheritance</span></h1>
+            <p class="subtitle">Build flexible things by combining parts, not by creating rigid family trees</p>
+        </div>
+
+        <div class="analogy-section">
+            <h2>🧸 Think of it Like Building Toys</h2>
+            <p style="margin-bottom: 30px; color: #2d3436; font-size: 1.1em;">
+                Would you rather have toys that are locked into one shape, or toys you can take apart and rebuild in different ways?
+            </p>
+            
+            <div class="toy-comparison">
+                <div class="toy-approach inheritance-toy">
+                    <div class="toy-title">❌ Inheritance (Fixed Action Figures)</div>
+                    <div class="toy-example">
+                        <div class="tree-structure">
+Superhero
+├── FlyingHero (can fly)
+│   ├── Superman (fly + strength)
+│   └── Iron Man (fly + tech)
+├── SwimmingHero (can swim)
+│   ├── Aquaman (swim + talk to fish)
+│   └── Namor (swim + fly) ❌ Problem!
+└── TechHero (has gadgets)
+    ├── Batman (tech + detective)
+    └── Iron Man ❌ Where does he go?
+                        </div>
+                        <div class="problem">
+                            <strong>Problems:</strong><br>
+                            • Iron Man flies AND has tech - which family?<br>
+                            • Aquaman can swim but what if he learns to fly?<br>
+                            • Adding new powers means redesigning the whole tree
+                        </div>
+                    </div>
+                </div>
+
+                <div class="toy-approach composition-toy">
+                    <div class="toy-title">✅ Composition (LEGO Blocks)</div>
+                    <div class="toy-example">
+                        <p style="margin-bottom: 15px;"><strong>Available Abilities (like LEGO pieces):</strong></p>
+                        <span class="lego-piece fly-piece">🚀 Flying</span>
+                        <span class="lego-piece swim-piece">🏊 Swimming</span>
+                        <span class="lego-piece engine-piece">⚙️ Tech Gadgets</span>
+                        <span class="lego-piece" style="background: #f0e6ff; border: 2px solid #8e44ad; color: #7d3c98;">💪 Super Strength</span>
+                        
+                        <div style="margin: 20px 0; padding: 15px; background: rgba(39,174,96,0.1); border-radius: 8px;">
+                            <strong>Build Any Hero:</strong><br>
+                            <strong>Superman:</strong> Flying + Super Strength<br>
+                            <strong>Iron Man:</strong> Flying + Tech Gadgets<br>
+                            <strong>Aquaman:</strong> Swimming + Talk to Fish<br>
+                            <strong>Namor:</strong> Swimming + Flying + Super Strength
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="comparison">
+            <div class="scenario bad">
+                <h2>❌ Inheritance Approach</h2>
+                <p style="margin-bottom: 20px;">Rigid family tree - everyone must fit into predetermined categories</p>
+                
+                <div class="code-block">
+                    <div class="code-title">🦸‍♀️ Superhero Inheritance Hierarchy</div>
+                    <pre>class Animal {
+    eat() { return "eating"; }
+}
+
+class Bird extends Animal {
+    fly() { return "flying"; }
+    eat() { return "eating seeds"; }
+}
+
+class Fish extends Animal {
+    swim() { return "swimming"; }
+    eat() { return "eating plankton"; }
+}
+
+// Problem: What about a duck?
+// Ducks can fly AND swim!
+// Where does Duck go in this tree?
+
+class Duck extends Bird {
+    swim() { return "swimming"; } // Awkward!
+}
+
+// Even worse: What about a penguin?
+// Penguins are birds but can't fly!
+class Penguin extends Bird {
+    fly() { 
+        throw new Error("Penguins can't fly!"); 
+    }
+}</pre>
+                </div>
+                
+                <div class="inheritance-problems">
+                    <strong>Problems with this approach:</strong><br>
+                    • Rigid structure - hard to add new combinations<br>
+                    • Some animals break the rules (penguin "birds" that can't fly)<br>
+                    • Diamond problem - multiple inheritance conflicts<br>
+                    • Deep hierarchies become hard to understand<br>
+                    • Changing parent class breaks all children
+                </div>
+            </div>
+
+            <div class="scenario good">
+                <h2>✅ Composition Approach</h2>
+                <p style="margin-bottom: 20px;">Flexible building blocks - mix and match abilities as needed</p>
+                
+                <div class="code-block">
+                    <div class="code-title">🧩 Ability-Based Composition</div>
+                    <pre>// Create reusable abilities
+const flyingAbility = {
+    fly() { return "soaring through the sky"; }
+};
+
+const swimmingAbility = {
+    swim() { return "gliding through water"; }
+};
+
+const eatingAbility = {
+    eat(food) { return `eating ${food}`; }
+};
+
+// Compose animals by combining abilities
+function createAnimal(name, abilities) {
+    return {
+        name,
+        ...abilities
+    };
+}
+
+// Now we can create any combination!
+const duck = createAnimal("Duck", {
+    ...flyingAbility,
+    ...swimmingAbility,
+    ...eatingAbility
+});
+
+const penguin = createAnimal("Penguin", {
+    ...swimmingAbility,
+    ...eatingAbility
+    // No flying - perfectly fine!
+});
+
+const eagle = createAnimal("Eagle", {
+    ...flyingAbility,
+    ...eatingAbility
+});</pre>
+                </div>
+                
+                <div class="composition-benefits">
+                    <strong>Benefits of this approach:</strong><br>
+                    • Flexible - any combination of abilities<br>
+                    • Easy to add new abilities without changing existing code<br>
+                    • No forced inheritance - only include what you need<br>
+                    • Reusable components across different animal types<br>
+                    • Changes to one ability don't affect others
+                </div>
+            </div>
+        </div>
+
+        <div class="interactive-demo">
+            <h2>🚗 Interactive Demo: Build Your Dream Vehicle</h2>
+            <p>See how composition lets you build exactly what you need!</p>
+            
+            <div class="demo-buttons">
+                <button class="demo-btn" onclick="showVehicleBuilder()">Composition Builder</button>
+                <button class="demo-btn" onclick="showInheritanceProblems()">Inheritance Problems</button>
+            </div>
+            
+            <div class="demo-result" id="demo-result">
+                Click a button above to explore different approaches to building vehicles!
+            </div>
+        </div>
+
+        <div class="real-world">
+            <h2>🌍 Real-World Examples</h2>
+            <div class="examples">
+                <div class="example">
+                    <h3>🎵 Music Software</h3>
+                    <p><strong>Composition:</strong> Audio effects as plugins</p>
+                    <p>Mix and match: Reverb + Delay + Distortion</p>
+                    <p><strong>vs Inheritance:</strong> PresetGuitarWithReverbAndDelay class</p>
+                </div>
+                
+                <div class="example">
+                    <h3>🍕 Restaurant Menu</h3>
+                    <p><strong>Composition:</strong> Pizza + toppings of choice</p>
+                    <p>Flexible: Pepperoni + Mushrooms + Extra Cheese</p>
+                    <p><strong>vs Inheritance:</strong> PepperoniMushroomExtraCheeseDeluxePizza</p>
+                </div>
+                
+                <div class="example">
+                    <h3>📱 Smartphone Features</h3>
+                    <p><strong>Composition:</strong> Camera + GPS + Bluetooth modules</p>
+                    <p>Upgradeable: Swap in better camera, add 5G</p>
+                    <p><strong>vs Inheritance:</strong> Locked feature sets per model</p>
+                </div>
+                
+                <div class="example">
+                    <h3>🏠 Home Automation</h3>
+                    <p><strong>Composition:</strong> Smart lights + sensors + speakers</p>
+                    <p>Customizable: Add what you need, when you need it</p>
+                    <p><strong>vs Inheritance:</strong> Fixed "smart home packages"</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="benefits">
+            <div class="benefit">
+                <div class="benefit-icon">🔧</div>
+                <h3>Flexible Design</h3>
+                <p>Mix and match components to create exactly what you need. No forced features or limitations.</p>
+            </div>
+            
+            <div class="benefit">
+                <div class="benefit-icon">🔄</div>
+                <h3>Easy Changes</h3>
+                <p>Swap out components without affecting the rest. Update one part without rebuilding everything.</p>
+            </div>
+            
+            <div class="benefit">
+                <div class="benefit-icon">🧪</div>
+                <h3>Better Testing</h3>
+                <p>Test each component independently. Find bugs faster and fix them with confidence.</p>
+            </div>
+            
+            <div class="benefit">
+                <div class="benefit-icon">♻️</div>
+                <h3>Code Reuse</h3>
+                <p>Use the same components in different contexts. Write once, use everywhere, maintain easily.</p>
+            </div>
+            
+            <div class="benefit">
+                <div class="benefit-icon">🚀</div>
+                <h3>Faster Development</h3>
+                <p>Build new features by combining existing components. Less coding, more creating.</p>
+            </div>
+            
+            <div class="benefit">
+                <div class="benefit-icon">🎯</div>
+                <h3>Cleaner Code</h3>
+                <p>No deep inheritance chains or confusing hierarchies. Simple, focused, understandable components.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showVehicleBuilder() {
+            // Remove active class from all buttons
+            document.querySelectorAll('.demo-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+            
+            const resultDiv = document.getElementById('demo-result');
+            
+            resultDiv.innerHTML = `
+                <div class="fade-in">
+                    <h3>✅ Composition: Mix & Match Vehicle Components</h3>
+                    <p style="margin-bottom: 20px;">Choose your components to build any vehicle you want!</p>
+                    
+                    <div class="vehicle-builder">
+                        <div class="component" onclick="toggleComponent(this)">
+                            🚗 <strong>Wheels</strong><br>
+                            <small>Ground movement</small>
+                        </div>
+                        <div class="component" onclick="toggleComponent(this)">
+                            ✈️ <strong>Wings</strong><br>
+                            <small>Flight capability</small>
+                        </div>
+                        <div class="component" onclick="toggleComponent(this)">
+                            ⛵ <strong>Hull</strong><br>
+                            <small>Water travel</small>
+                        </div>
+                        <div class="component" onclick="toggleComponent(this)">
+                            🔋 <strong>Electric Engine</strong><br>
+                            <small>Eco-friendly power</small>
+                        </div>
+                        <div class="component" onclick="toggleComponent(this)">
+                            ⛽ <strong>Gas Engine</strong><br>
+                            <small>Traditional power</small>
+                        </div>
+                        <div class="component" onclick="toggleComponent(this)">
+                            🚁 <strong>Rotor</strong><br>
+                            <small>Helicopter flight</small>
+                        </div>
+                    </div>
+                    
+                    <div id="vehicle-result" style="background: rgba(46,204,113,0.2); padding: 20px; border-radius: 10px; margin-top: 20px;">
+                        <strong>Your Vehicle:</strong> Click components above to build your custom vehicle!
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background: rgba(116,185,255,0.2); border-radius: 8px;">
+                        <strong>🎯 The Magic:</strong><br>
+                        • Want a flying car? Wings + Wheels + Engine<br>
+                        • Eco-friendly boat? Hull + Electric Engine<br>
+                        • Amphibious helicopter? Rotor + Hull<br>
+                        • Any combination is possible!
+                    </div>
+                </div>
+            `;
+            
+            updateVehicleDisplay();
+        }
+
+        function showInheritanceProblems() {
+            // Remove active class from all buttons
+            document.querySelectorAll('.demo-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+            
+            const resultDiv = document.getElementById('demo-result');
+            
+            resultDiv.innerHTML = `
+                <div class="fade-in">
+                    <h3>❌ Inheritance: Rigid Vehicle Categories</h3>
+                    
+                    <div style="font-family: monospace; background: rgba(231,76,60,0.1); padding: 20px; border-radius: 10px; margin: 20px 0;">
+                        Vehicle<br>
+                        ├── LandVehicle<br>
+                        │   ├── Car<br>
+                        │   └── Motorcycle<br>
+                        ├── WaterVehicle<br>
+                        │   ├── Boat<br>
+                        │   └── Submarine<br>
+                        └── AirVehicle<br>
+                            ├── Airplane<br>
+                            └── Helicopter<br>
+                    </div>
+                    
+                    <div style="background: rgba(231,76,60,0.2); padding: 20px; border-radius: 10px; margin: 20px 0;">
+                        <strong>🚨 Problems:</strong><br><br>
+                        
+                        <div class="problem">
+                            <strong>🚁 Flying Car:</strong> Is it a LandVehicle or AirVehicle? It's both! 😵
+                        </div>
+                        
+                        <div class="problem">
+                            <strong>⛵ Amphibious Vehicle:</strong> Needs to be both LandVehicle AND WaterVehicle
+                        </div>
+                        
+                        <div class="problem">
+                            <strong>🚤 Hydrofoil:</strong> Flies above water but isn't really an air vehicle
+                        </div>
+                        
+                        <div class="problem">
+                            <strong>🛸 Submarine Car:</strong> Drives underwater - which category?
+                        </div>
+                    </div>
+                    
+                    <div style="background: rgba(231,76,60,0.1); padding: 20px; border-radius: 10px;">
+                        <strong>💔 The Result:</strong><br>
+                        • Force vehicles into wrong categories<br>
+                        • Create awkward multiple inheritance<br>
+                        • Limit innovation to existing categories<br>
+                        • Break the system with every new idea<br><br>
+                        
+                        <strong>Inheritance works for simple "IS-A" relationships, but fails with complex, multi-capability objects!</strong>
+                    </div>
+                </div>
+            `;
+        }
+
+        function toggleComponent(element) {
+            element.classList.toggle('selected');
+            updateVehicleDisplay();
+        }
+
+        function updateVehicleDisplay() {
+            const resultDiv = document.getElementById('vehicle-result');
+            if (!resultDiv) return;
+            
+            const selectedComponents = document.querySelectorAll('.component.selected');
+            
+            if (selectedComponents.length === 0) {
+                resultDiv.innerHTML = '<strong>Your Vehicle:</strong> Click components above to build your custom vehicle!';
+                return;
+            }
+            
+            const components = Array.from(selectedComponents).map(comp => {
+                const text = comp.textContent.trim();
+                return text.split('\n')[0].trim();
+            });
+            
+            let vehicleType = "Custom Vehicle";
+            let description = "A unique creation";
+            
+            // Determine vehicle type based on components
+            const hasWheels = components.some(c => c.includes('Wheels'));
+            const hasWings = components.some(c => c.includes('Wings'));
+            const hasHull = components.some(c => c.includes('Hull'));
+            const hasRotor = components.some(c => c.includes('Rotor'));
+            
+            if (hasWheels && hasWings) {
+                vehicleType = "Flying Car";
+                description = "Drives on roads and flies through the sky!";
+            } else if (hasHull && hasWheels) {
+                vehicleType = "Amphibious Vehicle";
+                description = "Travels on both land and water!";
+            } else if (hasRotor && hasHull) {
+                vehicleType = "Amphibious Helicopter";
+                description = "Can land on water and fly!";
+            } else if (hasWings && hasHull) {
+                vehicleType = "Flying Boat";
+                description = "Takes off from water and flies!";
+            } else if (hasWheels) {
+                vehicleType = "Ground Vehicle";
+                description = "Perfect for road travel!";
+            } else if (hasWings) {
+                vehicleType = "Aircraft";
+                description = "Built for the skies!";
+            } else if (hasHull) {
+                vehicleType = "Watercraft";
+                description = "Made for the water!";
+            } else if (hasRotor) {
+                vehicleType = "Helicopter";
+                description = "Vertical takeoff and landing!";
+            }
+            
+            resultDiv.innerHTML = `
+                <strong>Your Vehicle:</strong> ${vehicleType}<br>
+                <strong>Components:</strong> ${components.join(', ')}<br>
+                <strong>Description:</strong> ${description}
+            `;
+        }
+
+        // Initialize the demo
+        setTimeout(() => {
+            const firstBtn = document.querySelector('.

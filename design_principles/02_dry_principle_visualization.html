@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DRY Principle - Visual Guide</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .main-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+        }
+        
+        .main-title {
+            font-size: 4em;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            font-weight: bold;
+        }
+        
+        .main-subtitle {
+            font-size: 1.8em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-weight: 300;
+        }
+        
+        .principle-card {
+            background: white;
+            border-radius: 20px;
+            margin: 30px 0;
+            padding: 40px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .principle-card:hover {
+            transform: translateY(-8px);
+        }
+        
+        .section-title {
+            font-size: 2.2em;
+            color: #ff6b6b;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: bold;
+            border-bottom: 3px solid #ff6b6b;
+            padding-bottom: 15px;
+        }
+        
+        .analogy-section {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .analogy-title {
+            font-size: 1.8em;
+            color: #2d3436;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .analogy-content {
+            font-size: 1.3em;
+            color: #2d3436;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .wet-code, .dry-code {
+            padding: 25px;
+            border-radius: 15px;
+            position: relative;
+        }
+        
+        .wet-code {
+            background: linear-gradient(135deg, #ff7675 0%, #d63031 100%);
+            color: white;
+        }
+        
+        .dry-code {
+            background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+            color: white;
+        }
+        
+        .code-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .icon {
+            font-size: 1.8em;
+            margin-right: 15px;
+        }
+        
+        .code-block {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            line-height: 1.4;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+        
+        .file-name {
+            color: #74b9ff;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .wet-code .file-name {
+            color: #ffeaa7;
+        }
+        
+        .problem-highlight {
+            background: rgba(255,255,255,0.2);
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 5px solid #fdcb6e;
+        }
+        
+        .benefit-highlight {
+            background: rgba(255,255,255,0.2);
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+            border-left: 5px solid #a29bfe;
+        }
+        
+        .mobile-examples {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .mobile-card {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            border-radius: 15px;
+            padding: 25px;
+            color: white;
+        }
+        
+        .mobile-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .mobile-icon {
+            margin-right: 10px;
+            font-size: 1.5em;
+        }
+        
+        .violation-examples {
+            background: linear-gradient(135deg, #fd79a8 0%, #e84393 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            color: white;
+        }
+        
+        .violation-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .violation-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .violation-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+        
+        .violation-item h4 {
+            margin-top: 0;
+            color: #ffeaa7;
+        }
+        
+        .arrow {
+            text-align: center;
+            font-size: 3em;
+            color: #00b894;
+            margin: 20px 0;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        .key-takeaway {
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            border-radius: 20px;
+            padding: 40px;
+            margin: 40px 0;
+            color: white;
+            text-align: center;
+        }
+        
+        .takeaway-title {
+            font-size: 2.2em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        
+        .takeaway-content {
+            font-size: 1.3em;
+            line-height: 1.6;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-title {
+                font-size: 2.5em;
+            }
+            
+            .main-subtitle {
+                font-size: 1.3em;
+            }
+            
+            .principle-card {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-header">
+            <div class="main-title">DRY</div>
+            <div class="main-subtitle">Don't Repeat Yourself</div>
+        </div>
+
+        <!-- Real Life Analogy -->
+        <div class="principle-card">
+            <div class="analogy-section">
+                <div class="analogy-title">🏠 Think of Your House</div>
+                <div class="analogy-content">
+                    <p><strong>BAD:</strong> Having 5 different remote controls for the same TV</p>
+                    <p><strong>GOOD:</strong> One universal remote that controls everything</p>
+                    <br>
+                    <p><strong>DRY Principle:</strong> Every piece of knowledge should have a single, unambiguous representation in your system</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- WET vs DRY Code Comparison -->
+        <div class="principle-card">
+            <div class="section-title">🔥 WET Code vs DRY Code</div>
+            <p style="text-align: center; font-size: 1.2em; color: #636e72;">
+                <strong>WET = "We Enjoy Typing" or "Write Everything Twice"</strong>
+            </p>
+            
+            <div class="comparison-grid">
+                <!-- WET Code -->
+                <div class="wet-code">
+                    <div class="code-title">
+                        <span class="icon">💧</span>
+                        WET Code (BAD)
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="file-name">UserRegistration.java</div>
+                        <pre>if (email == null || email.isEmpty()) {
+    showError("Email is required");
+    return false;
+}
+if (!email.contains("@")) {
+    showError("Invalid email format");
+    return false;
+}</pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="file-name">UserLogin.java</div>
+                        <pre>if (email == null || email.isEmpty()) {
+    showError("Email is required");
+    return false;
+}
+if (!email.contains("@")) {
+    showError("Invalid email format");
+    return false;
+}</pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="file-name">UserProfile.java</div>
+                        <pre>if (email == null || email.isEmpty()) {
+    showError("Email is required");
+    return false;
+}
+if (!email.contains("@")) {
+    showError("Invalid email format");
+    return false;
+}</pre>
+                    </div>
+                    
+                    <div class="problem-highlight">
+                        <strong>Problems:</strong>
+                        <ul>
+                            <li>Same validation logic copied 3 times</li>
+                            <li>Bug fix needed in 3 places</li>
+                            <li>Easy to forget updating all copies</li>
+                            <li>Code bloat and maintenance nightmare</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- DRY Code -->
+                <div class="dry-code">
+                    <div class="code-title">
+                        <span class="icon">🌵</span>
+                        DRY Code (GOOD)
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="file-name">EmailValidator.java</div>
+                        <pre>public class EmailValidator {
+    public static boolean isValid(String email) {
+        if (email == null || email.isEmpty()) {
+            showError("Email is required");
+            return false;
+        }
+        if (!email.contains("@")) {
+            showError("Invalid email format");
+            return false;
+        }
+        return true;
+    }
+}</pre>
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="file-name">Usage everywhere</div>
+                        <pre>// UserRegistration.java
+EmailValidator.isValid(email);
+
+// UserLogin.java
+EmailValidator.isValid(email);
+
+// UserProfile.java
+EmailValidator.isValid(email);</pre>
+                    </div>
+                    
+                    <div class="benefit-highlight">
+                        <strong>Benefits:</strong>
+                        <ul>
+                            <li>Single source of truth</li>
+                            <li>Fix bug once, fixed everywhere</li>
+                            <li>Consistent behavior across app</li>
+                            <li>Less code, easier maintenance</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile App Examples -->
+        <div class="principle-card">
+            <div class="section-title">📱 Mobile App DRY Examples</div>
+            
+            <div class="mobile-examples">
+                <div class="mobile-card">
+                    <div class="mobile-title">
+                        <span class="mobile-icon">🎨</span>
+                        UI Components
+                    </div>
+                    <p><strong>WET:</strong> Copy button styling code in every activity</p>
+                    <p><strong>DRY:</strong> Create reusable CustomButton component</p>
+                    <div class="code-block">
+                        <pre>// Reusable component
+&lt;CustomButton 
+    text="Login" 
+    style="primary" /&gt;</pre>
+                    </div>
+                </div>
+                
+                <div class="mobile-card">
+                    <div class="mobile-title">
+                        <span class="mobile-icon">🌐</span>
+                        API Calls
+                    </div>
+                    <p><strong>WET:</strong> Repeat HTTP setup, headers, error handling in every service</p>
+                    <p><strong>DRY:</strong> Create base ApiService class</p>
+                    <div class="code-block">
+                        <pre>// One base service
+ApiService.get("/users");
+ApiService.post("/login", data);</pre>
+                    </div>
+                </div>
+                
+                <div class="mobile-card">
+                    <div class="mobile-title">
+                        <span class="mobile-icon">💾</span>
+                        Data Storage
+                    </div>
+                    <p><strong>WET:</strong> Repeat SharedPreferences code everywhere</p>
+                    <p><strong>DRY:</strong> Create PreferenceManager utility</p>
+                    <div class="code-block">
+                        <pre>// Simple utility
+PreferenceManager.save("token", value);
+PreferenceManager.get("token");</pre>
+                    </div>
+                </div>
+                
+                <div class="mobile-card">
+                    <div class="mobile-title">
+                        <span class="mobile-icon">⚠️</span>
+                        Error Handling
+                    </div>
+                    <p><strong>WET:</strong> Copy error dialogs and handling logic</p>
+                    <p><strong>DRY:</strong> Create ErrorHandler utility</p>
+                    <div class="code-block">
+                        <pre>// Unified error handling
+ErrorHandler.show(context, error);
+ErrorHandler.logError(error);</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Common DRY Violations -->
+        <div class="principle-card">
+            <div class="violation-examples">
+                <div class="violation-title">🚨 Common DRY Violations You've Probably Done</div>
+                
+                <div class="violation-list">
+                    <div class="violation-item">
+                        <h4>🔢 Magic Numbers</h4>
+                        <p><strong>Bad:</strong> Using 30, 60, 100 scattered throughout code</p>
+                        <p><strong>Good:</strong> Constants.TIMEOUT_SECONDS = 30</p>
+                    </div>
+                    
+                    <div class="violation-item">
+                        <h4>📝 Copy-Paste Code</h4>
+                        <p><strong>Bad:</strong> Copying entire methods and changing 1 line</p>
+                        <p><strong>Good:</strong> Extract common logic into shared method</p>
+                    </div>
+                    
+                    <div class="violation-item">
+                        <h4>🎨 Repeated Styles</h4>
+                        <p><strong>Bad:</strong> Same color values repeated in multiple XML files</p>
+                        <p><strong>Good:</strong> colors.xml with named colors</p>
+                    </div>
+                    
+                    <div class="violation-item">
+                        <h4>📄 Duplicate Strings</h4>
+                        <p><strong>Bad:</strong> "Loading..." text written 10 times</p>
+                        <p><strong>Good:</strong> strings.xml with @string/loading</p>
+                    </div>
+                    
+                    <div class="violation-item">
+                        <h4>🔄 Repeated Logic</h4>
+                        <p><strong>Bad:</strong> Same date formatting code everywhere</p>
+                        <p><strong>Good:</strong> DateUtils.formatDate() method</p>
+                    </div>
+                    
+                    <div class="violation-item">
+                        <h4>🏗️ Similar Classes</h4>
+                        <p><strong>Bad:</strong> UserAdapter, ProductAdapter with 90% same code</p>
+                        <p><strong>Good:</strong> Generic BaseAdapter<T> class</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- The DRY Process -->
+        <div class="principle-card">
+            <div class="section-title">🔄 How to Apply DRY</div>
+            
+            <div style="background: linear-gradient(135deg, #55a3ff 0%, #003d82 100%); border-radius: 15px; padding: 30px; color: white;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap;">
+                    <div style="text-align: center; flex: 1; min-width: 200px; margin: 10px;">
+                        <div style="font-size: 3em; margin-bottom: 10px;">👀</div>
+                        <h3>1. SPOT</h3>
+                        <p>Look for repeated code, values, or logic</p>
+                    </div>
+                    
+                    <div class="arrow">→</div>
+                    
+                    <div style="text-align: center; flex: 1; min-width: 200px; margin: 10px;">
+                        <div style="font-size: 3em; margin-bottom: 10px;">🎯</div>
+                        <h3>2. EXTRACT</h3>
+                        <p>Pull common code into functions, classes, or constants</p>
+                    </div>
+                    
+                    <div class="arrow">→</div>
+                    
+                    <div style="text-align: center; flex: 1; min-width: 200px; margin: 10px;">
+                        <div style="font-size: 3em; margin-bottom: 10px;">🔗</div>
+                        <h3>3. REUSE</h3>
+                        <p>Replace all duplicates with calls to the single source</p>
+                    </div>
+                </div>
+                
+                <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 20px; margin-top: 20px;">
+                    <h4 style="color: #ffeaa7;">⚡ Quick DRY Check:</h4>
+                    <p>If you need to fix the same bug in multiple places, you violated DRY!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Takeaway -->
+        <div class="key-takeaway">
+            <div class="takeaway-title">🎯 The Golden Rule</div>
+            <div class="takeaway-content">
+                <p><strong>"Every piece of knowledge must have a single, unambiguous, authoritative representation within a system"</strong></p>
+                <br>
+                <p>Translation: <strong>If you write the same code twice, you're doing it wrong!</strong></p>
+                <br>
+                <p>🏆 <strong>Result:</strong> Less bugs, easier changes, cleaner code, happier developers!</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Software Development Principles</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            display: flex;
+            min-height: 70vh;
+        }
+        
+        .sidebar {
+            width: 300px;
+            background: #f8f9fa;
+            border-right: 1px solid #e9ecef;
+            padding: 20px 0;
+        }
+        
+        .folder-item {
+            padding: 15px 25px;
+            cursor: pointer;
+            border-bottom: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .folder-item:hover {
+            background: #e9ecef;
+            padding-left: 30px;
+        }
+        
+        .folder-item.active {
+            background: #007bff;
+            color: white;
+            border-left: 4px solid #0056b3;
+        }
+        
+        .folder-icon {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .folder-name {
+            font-weight: 500;
+            text-transform: capitalize;
+        }
+        
+        .content-area {
+            flex: 1;
+            padding: 30px;
+        }
+        
+        .welcome-message {
+            text-align: center;
+            color: #6c757d;
+            margin-top: 100px;
+        }
+        
+        .welcome-message h2 {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+        
+        .file-list {
+            display: none;
+        }
+        
+        .file-list.active {
+            display: block;
+        }
+        
+        .file-list h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .file-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .file-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .file-card:hover {
+            border-color: #007bff;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        
+        .file-icon {
+            font-size: 2rem;
+            color: #007bff;
+            margin-bottom: 10px;
+        }
+        
+        .file-name {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .file-description {
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+        
+        .content-viewer {
+            display: none;
+            height: 80vh;
+        }
+        
+        .content-viewer.active {
+            display: block;
+        }
+        
+        .viewer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: #5a6268;
+        }
+        
+        .content-frame {
+            width: 100%;
+            height: calc(100% - 60px);
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Software Development Principles</h1>
+            <p>Explore fundamental concepts and best practices in software development</p>
+        </div>
+        
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="folder-item" onclick="showFolder('architecture_principles')">
+                    <span class="folder-icon">🏗️</span>
+                    <span class="folder-name">Architecture Principles</span>
+                </div>
+                <div class="folder-item" onclick="showFolder('design_principles')">
+                    <span class="folder-icon">🎨</span>
+                    <span class="folder-name">Design Principles</span>
+                </div>
+                <div class="folder-item" onclick="showFolder('quality_principles')">
+                    <span class="folder-icon">⭐</span>
+                    <span class="folder-name">Quality Principles</span>
+                </div>
+                <div class="folder-item" onclick="showFolder('software_architecture')">
+                    <span class="folder-icon">🏛️</span>
+                    <span class="folder-name">Software Architecture</span>
+                </div>
+            </div>
+            
+            <div class="content-area">
+                <div class="welcome-message" id="welcome">
+                    <h2>Welcome to Software Development Principles</h2>
+                    <p>Select a category from the sidebar to explore different principles and concepts</p>
+                </div>
+                
+                <div class="file-list" id="architecture_principles">
+                    <h2>Architecture Principles</h2>
+                    <div class="file-grid">
+                        <div class="file-card" onclick="openFile('architecture_principles/01_loose_coupling_viz.html')">
+                            <div class="file-icon">🔗</div>
+                            <div class="file-name">Loose Coupling</div>
+                            <div class="file-description">Understanding the principle of loose coupling in software architecture</div>
+                        </div>
+                        <div class="file-card" onclick="openFile('architecture_principles/02_high_cohesion_viz.html')">
+                            <div class="file-icon">🎯</div>
+                            <div class="file-name">High Cohesion</div>
+                            <div class="file-description">Exploring high cohesion and its importance in system design</div>
+                        </div>
+                        <div class="file-card" onclick="openFile('architecture_principles/03_encapsulation_viz.html')">
+                            <div class="file-icon">📦</div>
+                            <div class="file-name">Encapsulation</div>
+                            <div class="file-description">The fundamental principle of encapsulation in object-oriented design</div>
+                        </div>
+                        <div class="file-card" onclick="openFile('architecture_principles/04_abstraction_viz.html')">
+                            <div class="file-icon">🎭</div>
+                            <div class="file-name">Abstraction</div>
+                            <div class="file-description">How abstraction helps in managing complexity</div>
+                        </div>
+                        <div class="file-card" onclick="openFile('architecture_principles/05_modularity_viz.html')">
+                            <div class="file-icon">🧩</div>
+                            <div class="file-name">Modularity</div>
+                            <div class="file-description">Building modular systems for better maintainability</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="file-list" id="design_principles">
+                    <h2>Design Principles</h2>
+                    <div class="file-grid">
+                        <div class="file-card" onclick="openFile('design_principles/01_solid_principles_visualization.html')">
+                            <div class="file-icon">🛡️</div>
+                            <div class="file-name">SOLID Principles</div>
+                            <div class="file-description">The five fundamental principles of object-oriented design</div>
+                        </div>
+                        <div class="file-card" onclick="openFile('design_principles/02_dry_principle_visualization.html')">
+                            <div class="file-icon">🔄</div>
+                            <div class="file-name">DRY Principle</div>
+                            <div class="file-description">Don't Repeat Yourself - avoiding code duplication</div>
+                        </div>
+                        <div class="file-card" onclick="openFile('design_principles/03_kiss_principle_visualization.html')">
+                            <div class="file-icon">💋</div>
+                            <div class="file-name">KISS Principle</div>
+                            <div class="file-description">Keep It Simple, Stupid - the power of simplicity</div>
+                        </div>
+                        <div class="file-card" onclick="openFile('design_principles/04_yagni_visualization.html')">
+                            <div class="file-icon">🚫</div>
+                            <div class="file-name">YAGNI</div>
+                            <div class="file-description">You Aren't Gonna Need It - avoiding over-engineering</div>
+                        </div>
+                        <div class="file-card" onclick="openFile('design_principles/05_separation_of_concerns_visualization.html')">
+                            <div class="file-icon">🎯</div>
+                            <div class="file-name">Separation of Concerns</div>
+                            <div class="file-description">Dividing responsibilities for better code organization</div>
+                        </div>
+                        <div class="file-card" onclick="openFile('design_principles/06_composition_over_inheritance_visualization.html')">
+                            <div class="file-icon">🧱</div>
+                            <div class="file-name">Composition over Inheritance</div>
+                            <div class="file-description">Favoring composition for flexible design patterns</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="file-list" id="quality_principles">
+                    <h2>Quality Principles</h2>
+                    <div class="file-grid">
+                        <div class="file-card" onclick="openFile('quality_principles/01_quality_principles_viz.html')">
+                            <div class="file-icon">⭐</div>
+                            <div class="file-name">Quality Principles</div>
+                            <div class="file-description">Essential principles for maintaining high code quality</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="file-list" id="software_architecture">
+                    <h2>Software Architecture</h2>
+                    <div class="file-grid">
+                        <div class="file-card" onclick="openFile('software_architecture/01_architecture_principles_viz.html')">
+                            <div class="file-icon">🏛️</div>
+                            <div class="file-name">Architecture Principles</div>
+                            <div class="file-description">Core principles for designing robust software architectures</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="content-viewer" id="content-viewer">
+                    <div class="viewer-header">
+                        <h3 id="current-file-name"></h3>
+                        <button class="back-btn" onclick="goBack()">← Back to List</button>
+                    </div>
+                    <iframe class="content-frame" id="content-frame" src=""></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentFolder = null;
+        
+        function showFolder(folderName) {
+            document.querySelectorAll('.folder-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            event.target.closest('.folder-item').classList.add('active');
+            
+            document.getElementById('welcome').style.display = 'none';
+            document.getElementById('content-viewer').classList.remove('active');
+            
+            document.querySelectorAll('.file-list').forEach(list => {
+                list.classList.remove('active');
+            });
+            
+            document.getElementById(folderName).classList.add('active');
+            currentFolder = folderName;
+        }
+        
+        function openFile(filePath) {
+            const fileName = filePath.split('/').pop().replace('.html', '').replace(/_/g, ' ');
+            document.getElementById('current-file-name').textContent = fileName;
+            document.getElementById('content-frame').src = filePath;
+            
+            document.querySelectorAll('.file-list').forEach(list => {
+                list.classList.remove('active');
+            });
+            
+            document.getElementById('content-viewer').classList.add('active');
+        }
+        
+        function goBack() {
+            document.getElementById('content-viewer').classList.remove('active');
+            if (currentFolder) {
+                document.getElementById(currentFolder).classList.add('active');
+            } else {
+                document.getElementById('welcome').style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
